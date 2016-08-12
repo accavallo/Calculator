@@ -14,6 +14,8 @@
 		63FDD6071D5E6C0D00D98545 /* Calculator.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD6051D5E6C0D00D98545 /* Calculator.xcdatamodeld */; };
 		63FDD6091D5E6C0D00D98545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63FDD6081D5E6C0D00D98545 /* Assets.xcassets */; };
 		63FDD60C1D5E6C0D00D98545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63FDD60A1D5E6C0D00D98545 /* LaunchScreen.storyboard */; };
+		63FDD6171D5E6D5B00D98545 /* Calculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD6141D5E6D5B00D98545 /* Calculator.m */; };
+		63FDD6181D5E6D5B00D98545 /* Fraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD6161D5E6D5B00D98545 /* Fraction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,10 @@
 		63FDD6081D5E6C0D00D98545 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63FDD60B1D5E6C0D00D98545 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63FDD60D1D5E6C0D00D98545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63FDD6131D5E6D5B00D98545 /* Calculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Calculator.h; sourceTree = "<group>"; };
+		63FDD6141D5E6D5B00D98545 /* Calculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Calculator.m; sourceTree = "<group>"; };
+		63FDD6151D5E6D5B00D98545 /* Fraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fraction.h; sourceTree = "<group>"; };
+		63FDD6161D5E6D5B00D98545 /* Fraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fraction.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,10 @@
 		63FDD5F91D5E6C0D00D98545 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				63FDD6131D5E6D5B00D98545 /* Calculator.h */,
+				63FDD6141D5E6D5B00D98545 /* Calculator.m */,
+				63FDD6151D5E6D5B00D98545 /* Fraction.h */,
+				63FDD6161D5E6D5B00D98545 /* Fraction.m */,
 				63FDD5FA1D5E6C0D00D98545 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -157,6 +167,8 @@
 				63FDD6071D5E6C0D00D98545 /* Calculator.xcdatamodeld in Sources */,
 				63FDD5FE1D5E6C0D00D98545 /* AppDelegate.m in Sources */,
 				63FDD5FB1D5E6C0D00D98545 /* main.m in Sources */,
+				63FDD6171D5E6D5B00D98545 /* Calculator.m in Sources */,
+				63FDD6181D5E6D5B00D98545 /* Fraction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
