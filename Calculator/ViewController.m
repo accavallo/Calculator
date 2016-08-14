@@ -19,14 +19,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
     [self performInitialSetup];
     displayString = [NSMutableString stringWithCapacity:40];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    count = 1;
+    currentFraction = 0;
+    NSLog(@"%.0f", currentFraction);
+    outputLabel.text = @"0";
 }
 
 
@@ -56,98 +55,120 @@
 - (IBAction)digitClicked:(UIButton *)sender {
     [self processDigit:sender.tag];
 
-    switch (sender.tag) {
-        case 0:
-            NSLog(@"0 pressed");
-            break;
-        case 1:
-            NSLog(@"1 pressed");
-            break;
-        case 2:
-            NSLog(@"2 pressed");
-            break;
-        case 3:
-            NSLog(@"3 pressed");
-            break;
-        case 4:
-            NSLog(@"4 pressed");
-            break;
-        case 5:
-            NSLog(@"5 pressed");
-            break;
-        case 6:
-            NSLog(@"6 pressed");
-            break;
-        case 7:
-            NSLog(@"7 pressed");
-            break;
-        case 8:
-            NSLog(@"8 pressed");
-            break;
-        case 9:
-            NSLog(@"9 pressed");
-            break;
-        default:
-            break;
-    }
+//    switch (sender.tag) {
+//        case 0:
+//            NSLog(@"0 pressed");
+//            break;
+//        case 1:
+//            NSLog(@"1 pressed");
+//            break;
+//        case 2:
+//            NSLog(@"2 pressed");
+//            break;
+//        case 3:
+//            NSLog(@"3 pressed");
+//            break;
+//        case 4:
+//            NSLog(@"4 pressed");
+//            break;
+//        case 5:
+//            NSLog(@"5 pressed");
+//            break;
+//        case 6:
+//            NSLog(@"6 pressed");
+//            break;
+//        case 7:
+//            NSLog(@"7 pressed");
+//            break;
+//        case 8:
+//            NSLog(@"8 pressed");
+//            break;
+//        case 9:
+//            NSLog(@"9 pressed");
+//            break;
+//        default:
+//            break;
+//    }
 }
 
 -(void) processDigit:(long)digit {
     if (!decimalSet) {
         currentNumber = currentNumber * 10 + digit;
+        outputLabel.text = [NSString stringWithFormat:@"%.0f", currentNumber];
     } else {
-        currentNumber = currentNumber / 10 + digit;
+        currentFraction = currentFraction * 10 + digit; //THIS WON'T WORK. I NEED TO KEEP TRACK OF THE DECIMAL SEPARATELY
+        count++;
+        outputLabel.text = [NSString stringWithFormat:@"%.0f.%.0f", currentNumber, currentFraction];
     }
-    
-    
-    [displayString appendString:[NSString stringWithFormat:@"%ld", digit]];
-    outputLabel.text = displayString;
+    NSLog(@"%.0f %.0f", currentNumber, currentFraction);
+//    currentNumber += fract / (count * 10);
 }
 
+-(IBAction)clearButtonPressed:(UIButton *)sender {
+    outputLabel.text = @"0";
+    currentNumber = 0;
+    currentFraction = 0;
+    operandLabel.text = @"";
+    count = 1;
+    decimalSet = false;
+    NSLog(@"Clearing everything");
+}
 
-- (IBAction)equalsPressed:(UIButton *)sender {
-    int operand;
-    if ([operandLabel.text isEqualToString:@"+"]) {
-        operand = 0;
-    } else if([operandLabel.text isEqualToString:@"-"]) {
-        operand = 1;
-    } else if ([operandLabel.text isEqualToString:@"/"]) {
-        operand = 2;
-    } else if ([operandLabel.text isEqualToString:@"*"]) {
-        operand = 3;
-    }
-    
-    switch (operand) {
+-(IBAction)trigonometricButtons:(UIButton *)sender {
+    switch (sender.tag) {
         case 0:
-            NSLog(@"Add that shit up");
+            NSLog(@"Sine pressed");
             break;
         case 1:
-            NSLog(@"Gimme that shit boi!");
+            NSLog(@"Cosine pressed");
             break;
         case 2:
-            NSLog(@"Dividing like fission");
-            break;
-        case 3:
-            NSLog(@"Multiplying like rabbits");
+            NSLog(@"Tangent pressed");
             break;
         default:
             break;
     }
+}
+
+//Fraction button pressed
+-(IBAction)fractionButton:(UIButton *)sender {
+    NSLog(@"Fraction pressed");
+}
+
+//
+- (IBAction)equalsPressed:(UIButton *)sender {
+
+    if ([operandLabel.text isEqualToString:@"+"]) {
+        NSLog(@"Performing addition");
+    } else if([operandLabel.text isEqualToString:@"-"]) {
+        NSLog(@"Performing subtraction");
+    } else if ([operandLabel.text isEqualToString:@"/"]) {
+        NSLog(@"Performing subtraction");
+    } else if ([operandLabel.text isEqualToString:@"*"]) {
+        NSLog(@"Performing multiplication");
+    }
+    
     NSLog(@"Performing calculations");
 }
 
 - (IBAction)decimalPressed:(UIButton *)sender {
     NSLog(@"Now adding a decimal point");
-    if(!decimalSet)
-        [displayString appendString:@"."];
-    outputLabel.text = displayString;
+//    if(!decimalSet)
+//        [displayString appendString:@"."];
+//    outputLabel.text = displayString;
     decimalSet = true;
 }
 
+
+//All the buttons and labels will be created here, programmatically. I really, really, really, hate working with constraints, as they always seem to get one over on me. Therefore, I'm saying to hell with constraints, and creating everything this way. Constraints can't bother me, and I don't have to spend countless hours messing with them just to have them laugh in my face as they repeatedly don't work. Apple really needs to do something better with their constraints, or they'd probably just tell me to "git gud".
 -(void) performInitialSetup {
+    //These three variables will be used repeatedly in pretty much everything.
     CGFloat width = [UIScreen mainScreen].bounds.size.width * 0.9;
     CGFloat midX = CGRectGetMidX([UIScreen mainScreen].bounds);
     CGFloat midY = CGRectGetMidY([UIScreen mainScreen].bounds);
+    //This will keep the buttons the same relative size compared to the width of the screen.
+    CGFloat buttonSize = [UIScreen mainScreen].bounds.size.width * 0.1333333;
+//    NSLog(@"screen width = %.0f\nscreen height = %.0f", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     
     CGRect frame = CGRectMake(midX * 0.1, midY * 0.25, width, 35);
     
@@ -160,21 +181,69 @@
     [outputLabel setClipsToBounds:YES];
     [self.view addSubview:outputLabel];
     
-    operandLabel = [[UILabel alloc] initWithFrame:CGRectMake(midX * 1.75, midY * 0.15, 20, 20)];
+    operandLabel = [[UILabel alloc] initWithFrame:CGRectMake(midX * 1.75, midY * 0.15, buttonSize * 0.4, buttonSize * 0.4)];
     [operandLabel setTextColor:[UIColor grayColor]];
     [operandLabel setTextAlignment:NSTextAlignmentCenter];
-    [operandLabel setFont:[UIFont systemFontOfSize:25]];
+    [operandLabel setFont:[UIFont systemFontOfSize:([UIScreen mainScreen].bounds.size.width / 15)]];
     [self.view addSubview:operandLabel];
     
-    //Set the bottom row (row 1) buttons
-    decimal = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 1.26, 50, 50)];
+    //MARK: Other buttons
+    clear = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.6, midY * 0.58, buttonSize, buttonSize)];
+    [clear setTitle:@"Clear" forState:UIControlStateNormal];
+    [clear setBackgroundColor:[UIColor blueColor]];
+    [clear setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [clear addTarget:self action:@selector(clearButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:clear];
+    
+    sin = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 0.58, buttonSize, buttonSize)];
+    [sin setTitle:@"Sin" forState:UIControlStateNormal];
+    [sin setBackgroundColor:[UIColor blueColor]];
+    [sin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [sin addTarget:self action:@selector(trigonometricButtons:) forControlEvents:UIControlEventTouchUpInside];
+    sin.tag = 0;
+    [self.view addSubview:sin];
+    
+    cos = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 0.58, buttonSize, buttonSize)];
+    [cos setTitle:@"Cos" forState:UIControlStateNormal];
+    [cos setBackgroundColor:[UIColor blueColor]];
+    [cos setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [cos addTarget:self action:@selector(trigonometricButtons:) forControlEvents:UIControlEventTouchUpInside];
+    cos.tag = 1;
+    [self.view addSubview:cos];
+    
+    tan = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 0.58, buttonSize, buttonSize)];
+    [tan setTitle:@"Tan" forState:UIControlStateNormal];
+    [tan setBackgroundColor:[UIColor blueColor]];
+    [tan setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [tan addTarget:self action:@selector(trigonometricButtons:) forControlEvents:UIControlEventTouchUpInside];
+    tan.tag = 2;
+    [self.view addSubview:tan];
+    
+    fraction = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.58, buttonSize, buttonSize)];
+    [fraction setTitle:@"A b/c" forState:UIControlStateNormal];
+    [fraction setBackgroundColor:[UIColor blueColor]];
+    [fraction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [fraction addTarget:self action:@selector(fractionButton:) forControlEvents:UIControlEventTouchUpInside];
+    fraction.tag = 0;
+    [self.view addSubview:fraction];
+    
+    pi = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.58, buttonSize, buttonSize)];
+    [pi setTitle:@"π" forState:UIControlStateNormal];
+    [pi setBackgroundColor:[UIColor blueColor]];
+    [pi setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [pi addTarget:self action:@selector(fractionButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:pi];
+    
+//    √ aⁿ
+    //MARK: Row 1 buttons (bottom row)
+    decimal = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 1.26, buttonSize, buttonSize)];
     [decimal setTitle:@"." forState:UIControlStateNormal];
     [decimal setBackgroundColor:[UIColor lightGrayColor]];
     [decimal setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [decimal addTarget:self action:@selector(decimalPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:decimal];
     
-    zero = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 1.26, 50, 50)];
+    zero = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 1.26, buttonSize, buttonSize)];
     [zero setTitle:@"0" forState:UIControlStateNormal];
     [zero setBackgroundColor:[UIColor lightGrayColor]];
     [zero setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -182,14 +251,14 @@
     zero.tag = 0;
     [self.view addSubview:zero];
     
-    equals = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 1.26, 50, 50)];
+    equals = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 1.26, buttonSize, buttonSize)];
     [equals setTitle:@"=" forState:UIControlStateNormal];
     [equals setBackgroundColor:[UIColor lightGrayColor]];
     [equals setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [equals addTarget:self action:@selector(equalsPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:equals];
     
-    multiply = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 1.26, 50, 50)];
+    multiply = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 1.26, buttonSize, buttonSize)];
     [multiply setTitle:@"*" forState:UIControlStateNormal];
     [multiply setBackgroundColor:[UIColor lightGrayColor]];
     [multiply setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -197,8 +266,8 @@
     multiply.tag = 3;
     [self.view addSubview:multiply];
     
-    //Set row 2 buttons
-    one = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 1.09, 50, 50)];
+    //MARK: Row 2 buttons
+    one = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 1.09, buttonSize, buttonSize)];
     [one setTitle:@"1" forState:UIControlStateNormal];
     [one setBackgroundColor:[UIColor lightGrayColor]];
     [one setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -206,7 +275,7 @@
     one.tag = 1;
     [self.view addSubview:one];
     
-    two = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 1.09, 50, 50)];
+    two = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 1.09, buttonSize, buttonSize)];
     [two setTitle:@"2" forState:UIControlStateNormal];
     [two setBackgroundColor:[UIColor lightGrayColor]];
     [two setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -214,7 +283,7 @@
     two.tag = 2;
     [self.view addSubview:two];
     
-    three = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 1.09, 50, 50)];
+    three = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 1.09, buttonSize, buttonSize)];
     [three setTitle:@"3" forState:UIControlStateNormal];
     [three setBackgroundColor:[UIColor lightGrayColor]];
     [three setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -222,7 +291,7 @@
     three.tag = 3;
     [self.view addSubview:three];
     
-    divide = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 1.09, 50, 50)];
+    divide = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 1.09, buttonSize, buttonSize)];
     [divide setTitle:@"/" forState:UIControlStateNormal];
     [divide setBackgroundColor:[UIColor lightGrayColor]];
     [divide setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -230,8 +299,8 @@
     divide.tag = 2;
     [self.view addSubview:divide];
     
-    //Set row 3 buttons
-    four = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 0.92, 50, 50)];
+    //MARK: Row 3 buttons
+    four = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 0.92, buttonSize, buttonSize)];
     [four setTitle:@"4" forState:UIControlStateNormal];
     [four setBackgroundColor:[UIColor lightGrayColor]];
     [four setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -239,7 +308,7 @@
     four.tag = 4;
     [self.view addSubview:four];
     
-    five = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 0.92, 50, 50)];
+    five = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 0.92, buttonSize, buttonSize)];
     [five setTitle:@"5" forState:UIControlStateNormal];
     [five setBackgroundColor:[UIColor lightGrayColor]];
     [five setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -247,7 +316,7 @@
     five.tag = 5;
     [self.view addSubview:five];
     
-    six = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 0.92, 50, 50)];
+    six = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 0.92, buttonSize, buttonSize)];
     [six setTitle:@"6" forState:UIControlStateNormal];
     [six setBackgroundColor:[UIColor lightGrayColor]];
     [six setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -255,7 +324,7 @@
     six.tag = 6;
     [self.view addSubview:six];
     
-    minus = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.92, 50, 50)];
+    minus = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.92, buttonSize, buttonSize)];
     [minus setTitle:@"-" forState:UIControlStateNormal];
     [minus setBackgroundColor:[UIColor lightGrayColor]];
     [minus setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -263,8 +332,8 @@
     minus.tag = 1;
     [self.view addSubview:minus];
     
-    //Set row 4 (top row) buttons
-    seven = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 0.75, 50, 50)];
+    //MARK: Row 4 buttons (top row)
+    seven = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.4, midY * 0.75, buttonSize, buttonSize)];
     [seven setTitle:@"7" forState:UIControlStateNormal];
     [seven setBackgroundColor:[UIColor lightGrayColor]];
     [seven setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -272,7 +341,7 @@
     seven.tag = 7;
     [self.view addSubview:seven];
     
-    eight = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 0.75, 50, 50)];
+    eight = [[UIButton alloc] initWithFrame:CGRectMake(midX * 0.7, midY * 0.75, buttonSize, buttonSize)];
     [eight setTitle:@"8" forState:UIControlStateNormal];
     [eight setBackgroundColor:[UIColor lightGrayColor]];
     [eight setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -280,7 +349,7 @@
     eight.tag = 8;
     [self.view addSubview:eight];
     
-    nine = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 0.75, 50, 50)];
+    nine = [[UIButton alloc] initWithFrame:CGRectMake(midX, midY * 0.75, buttonSize, buttonSize)];
     [nine setTitle:@"9" forState:UIControlStateNormal];
     [nine setBackgroundColor:[UIColor lightGrayColor]];
     [nine setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -288,7 +357,7 @@
     nine.tag = 9;
     [self.view addSubview:nine];
     
-    plus = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.75, 50, 50)];
+    plus = [[UIButton alloc] initWithFrame:CGRectMake(midX * 1.3, midY * 0.75, buttonSize, buttonSize)];
     [plus setTitle:@"+" forState:UIControlStateNormal];
     [plus setBackgroundColor:[UIColor lightGrayColor]];
     [plus setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

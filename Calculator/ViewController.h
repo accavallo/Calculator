@@ -9,30 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "Calculator.h"
 #import "MyLabel.h"
+#import "Fraction.h"
 
 @interface ViewController : UIViewController{
 
     double currentNumber;
+    double currentFraction;
+    int count;
+    
     Boolean decimalSet;
-    NSMutableString *displayString;
+    
+    NSString *displayString;
+    
     MyLabel *outputLabel;
     UILabel *operandLabel;
-    UIButton *zero;
-    UIButton *one;
-    UIButton *two;
-    UIButton *three;
-    UIButton *four;
-    UIButton *five;
-    UIButton *six;
-    UIButton *seven;
-    UIButton *eight;
-    UIButton *nine;
-    UIButton *plus;
-    UIButton *minus;
-    UIButton *divide;
-    UIButton *multiply;
-    UIButton *decimal;
-    UIButton *equals;
+    
+    UIButton *zero, *one, *two, *three, *four, *five, *six, *seven, *eight, *nine;
+    UIButton *plus, *minus, *divide, *multiply, *decimal, *equals;
+    UIButton *clear, *pi, *sin, *cos, *tan, *fraction;
 }
 //@property (weak, nonatomic) IBOutlet UILabel *outputLabel;
 - (IBAction)binaryOperatorClicked:(UIButton *)sender;
