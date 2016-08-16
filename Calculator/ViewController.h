@@ -24,9 +24,18 @@
     MyLabel *outputLabel;
     UILabel *operandLabel;
     
+    id buttonArray[7][6];
+    
     UIButton *zero, *one, *two, *three, *four, *five, *six, *seven, *eight, *nine;
     UIButton *plus, *minus, *divide, *multiply, *decimal, *equals;
-    UIButton *clear, *pi, *sin, *cos, *tan, *fraction;
+    UIButton *clear, *clearAll, *pi, *sin, *cos, *tan, *fraction;
+    
+    UIButton *r2B2, *r2B3, *r2B4, *r2B5, *r2B6;
+    UIButton *r3B1, *r3B2, *r3B3, *r3B4, *r3B5, *r3B6;
+    UIButton *r4B1, *r4B2;
+    UIButton *r5B1, *r5B2;
+    UIButton *r6B1, *r6B2;
+    UIButton *r7B1, *r7B2;
 }
 //@property (weak, nonatomic) IBOutlet UILabel *outputLabel;
 - (IBAction)binaryOperatorClicked:(UIButton *)sender;
