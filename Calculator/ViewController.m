@@ -268,6 +268,7 @@
     [equationLabel setClipsToBounds:YES];
     [self.view addSubview:equationLabel];
     
+    //For loop to create all the buttons in their basic settings.
     for (int i = 0; i < 7; i++) {
         for (int j = 0; j < 6; j++) {
             //button's x value goes from 0.1 to 1.9 by 0.3 every column and the y value goes from 0.58 to 1.6 by 0.17 every row
