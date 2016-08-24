@@ -90,9 +90,9 @@
 				63FDD6141D5E6D5B00D98545 /* Calculator.m */,
 				63FDD6151D5E6D5B00D98545 /* Fraction.h */,
 				63FDD6161D5E6D5B00D98545 /* Fraction.m */,
-				63FDD5FA1D5E6C0D00D98545 /* main.m */,
 				63FDD61A1D5EBF2000D98545 /* MyLabel.h */,
 				63FDD61B1D5EBF2000D98545 /* MyLabel.m */,
+				63FDD5FA1D5E6C0D00D98545 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
