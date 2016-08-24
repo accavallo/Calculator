@@ -47,7 +47,11 @@
     } else if ([op isEqualToString:@"*"]) {
         result = operand1 * operand2;
     } else {
-        result = operand1 / operand2;
+        if (operand2 == 0) {
+            return @"Error";
+        } else
+            result = operand1 / operand2;
+        
     }
     
     return [NSString stringWithFormat:@"%.10Lf", result];

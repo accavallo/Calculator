@@ -117,18 +117,29 @@
 
 - (IBAction)binaryOperatorClicked:(UIButton *)sender {
     sender.alpha = 1.0;
-    NSUInteger lastIndex = [equationString length]-1;
-    NSString *lastChar = [equationString substringFromIndex:lastIndex];
-    NSRange range = NSMakeRange(lastIndex, 1);
+    NSUInteger lastIndex;
+    NSString *lastChar;
+    NSRange range;
+    if ([equationString length] > 0) {
+        lastIndex = [equationString length]-1;
+        lastChar = [equationString substringFromIndex:lastIndex];
+        range = NSMakeRange(lastIndex, 1);
+    }
+    
     if (operandNeedSet) {
         [equationString appendString:sender.titleLabel.text];
         [operatorsArray addObject:sender.titleLabel.text];
         [numbersArray addObject:outputLabel.text];
         equationLabel.text = equationString;
-    } else if ([lastChar isEqualToString:@"+"] || [lastChar isEqualToString:@"-"] ||
-               [lastChar isEqualToString:@"*"] || [lastChar isEqualToString:@"÷"]) {
+    } else if (([lastChar isEqualToString:@"+"] || [lastChar isEqualToString:@"-"] ||
+               [lastChar isEqualToString:@"*"] || [lastChar isEqualToString:@"÷"]) && lastIndex > 0) {
         [equationString replaceCharactersInRange:range withString:sender.titleLabel.text];
         [operatorsArray replaceObjectAtIndex:([operatorsArray count]-1) withObject:sender.titleLabel.text];
+    } else {
+        [equationString appendString:@"0"];
+        [operatorsArray addObject:sender.titleLabel.text];
+        [numbersArray addObject:outputLabel.text];
+        [equationString appendString:sender.titleLabel.text];
     }
     equationLabel.text = equationString;
 //    NSLog(@"%@", [equationString substringFromIndex:lastIndex]);
@@ -168,6 +179,9 @@
             
             NSString *result = [myCalc performOperation:operatorsArray[k]];
             
+            if ([result isEqualToString:@"Error"])
+                break;
+            
             [numbersArray removeObjectAtIndex:k];
             [numbersArray replaceObjectAtIndex:k withObject:result];
             
@@ -177,6 +191,9 @@
     
     //Perform the remaining addition and subtraction.
     for (int k = 0; k < [operatorsArray count]; k++) {
+        if ([numbersArray[k] isEqualToString:@"Error"])
+            break;
+        
         [myCalc setOperand1: [numbersArray[k] doubleValue]];
         [myCalc setOperand2: [numbersArray[k+1] doubleValue]];
         
@@ -244,7 +261,7 @@
     
     equationLabel = [[MyLabel alloc] initWithFrame:CGRectMake(midX * 0.1, midY * 0.18, width, 20)];
 //    [equationLabel setBackgroundColor:[UIColor lightGrayColor]];
-    [equationLabel setTextColor:[UIColor lightGrayColor]];
+    [equationLabel setTextColor:[UIColor darkGrayColor]];
     [equationLabel setTextAlignment:NSTextAlignmentRight];
     [equationLabel setFont:[UIFont systemFontOfSize:([UIScreen mainScreen].bounds.size.width / 15)]];
     [equationLabel.layer setCornerRadius:7.5];
