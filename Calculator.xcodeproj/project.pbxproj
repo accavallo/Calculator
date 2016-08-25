@@ -16,6 +16,7 @@
 		63FDD60C1D5E6C0D00D98545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63FDD60A1D5E6C0D00D98545 /* LaunchScreen.storyboard */; };
 		63FDD6171D5E6D5B00D98545 /* Calculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD6141D5E6D5B00D98545 /* Calculator.m */; };
 		63FDD6181D5E6D5B00D98545 /* Fraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD6161D5E6D5B00D98545 /* Fraction.m */; };
+		63FDD61C1D5EBF2000D98545 /* MyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDD61B1D5EBF2000D98545 /* MyLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		63FDD6141D5E6D5B00D98545 /* Calculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Calculator.m; sourceTree = "<group>"; };
 		63FDD6151D5E6D5B00D98545 /* Fraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fraction.h; sourceTree = "<group>"; };
 		63FDD6161D5E6D5B00D98545 /* Fraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fraction.m; sourceTree = "<group>"; };
+		63FDD61A1D5EBF2000D98545 /* MyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLabel.h; sourceTree = "<group>"; };
+		63FDD61B1D5EBF2000D98545 /* MyLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +90,8 @@
 				63FDD6141D5E6D5B00D98545 /* Calculator.m */,
 				63FDD6151D5E6D5B00D98545 /* Fraction.h */,
 				63FDD6161D5E6D5B00D98545 /* Fraction.m */,
+				63FDD61A1D5EBF2000D98545 /* MyLabel.h */,
+				63FDD61B1D5EBF2000D98545 /* MyLabel.m */,
 				63FDD5FA1D5E6C0D00D98545 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -165,6 +170,7 @@
 			files = (
 				63FDD6011D5E6C0D00D98545 /* ViewController.m in Sources */,
 				63FDD6071D5E6C0D00D98545 /* Calculator.xcdatamodeld in Sources */,
+				63FDD61C1D5EBF2000D98545 /* MyLabel.m in Sources */,
 				63FDD5FE1D5E6C0D00D98545 /* AppDelegate.m in Sources */,
 				63FDD5FB1D5E6C0D00D98545 /* main.m in Sources */,
 				63FDD6171D5E6D5B00D98545 /* Calculator.m in Sources */,
@@ -317,6 +323,7 @@
 				63FDD6121D5E6C0E00D98545 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

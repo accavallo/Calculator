@@ -9,13 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "Fraction.h"
 
-@interface Calculator : NSObject
+@interface Calculator : NSObject {
+    long double operand1, operand2;
+}
 
-@property (strong, nonatomic) Fraction *operand1;
-@property (strong, nonatomic) Fraction *operand2;
+//@property (strong, nonatomic) Fraction *operand1;
+//@property (strong, nonatomic) Fraction *operand2;
+
 @property (strong, nonatomic) Fraction *accumulator;
 
--(Fraction *) performOperatoin: (char) op;
+-(NSString *) performOperation: (NSString *) op;
 -(void) clear;
+-(void) setOperand1: (long double) num;
+-(void) setOperand2: (long double) num;
 
 @end

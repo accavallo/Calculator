@@ -10,49 +10,51 @@
 #import "Fraction.h"
 
 @implementation Calculator
-@synthesize operand1, operand2, accumulator;
+//@synthesize operand1, operand2, accumulator;
 
 -(id) init {
     self = [super init];
     
     if (self) {
-        operand1 = [[Fraction alloc] init];
-        operand2 = [[Fraction alloc] init];
-        accumulator = [[Fraction alloc] init];
+        operand1 = 0.0;
+        operand2 = 0.0;
+//        accumulator = [[Fraction alloc] init];
     }
     
     return self;
 }
 
--(void) clear {
-    accumulator.numerator = 0;
-    accumulator.denominator = 0;
+-(void) setOperand1:(long double)num {
+    operand1 = num;
 }
 
--(Fraction *) performOperatoin:(char)op {
-    Fraction *result;
+-(void) setOperand2:(long double)num {
+    operand2 = num;
+}
+
+-(void) clear {
+    _accumulator.numerator = 0;
+    _accumulator.denominator = 0;
+}
+
+-(NSString *) performOperation:(NSString *)op {
+    long double result;
     
-    switch (op) {
-        case '+':
-            result = [operand1 add:operand2];
-            break;
-        case '-':
-            result = [operand1 subtract:operand2];
-            break;
-        case '*':
-            result = [operand1 multiply:operand2];
-            break;
-        case '/':
-            result = [operand1 divide:operand2];
-            break;
-        default:
-            break;
+    if ([op isEqualToString:@"+"]) {
+        result = operand1 + operand2;
+    } else if ([op isEqualToString:@"-"]) {
+        result = operand1 - operand2;
+    } else if ([op isEqualToString:@"*"]) {
+        result = operand1 * operand2;
+    } else {
+        if (operand2 == 0) {
+            return @"Error";
+        } else
+            result = operand1 / operand2;
+        
     }
     
-    accumulator.numerator = result.numerator;
-    accumulator.denominator = result.denominator;
-    
-    return accumulator;
+    return [NSString stringWithFormat:@"%.10Lf", result];
 }
 
 @end
