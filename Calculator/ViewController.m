@@ -110,10 +110,6 @@
 //MARK: Numberpad Functions
 - (IBAction)digitClicked:(UIButton *)sender {
     sender.alpha = 1.0;
-//    NSString *temp = sender.titleLabel.text;
-//    NSInteger num = [temp integerValue];
-//    
-//    NSLog(@"%li pressed", (long)num);
     
     [equationString appendString:sender.titleLabel.text];
     equationLabel.text = equationString;
@@ -124,28 +120,35 @@
     operandNeedSet = true;
 }
 
+//Method to handle when a binary operator is clicked, or changed when reclicked.
 - (IBAction)binaryOperatorClicked:(UIButton *)sender {
     sender.alpha = 1.0;
     NSUInteger lastIndex;
     NSString *lastChar;
     NSRange range;
+    //If the binary operator is clicked without anything else being present, this will cause an error later on, so I had to check if the equation has at least one object in it.
     if ([equationString length] > 0) {
         lastIndex = [equationString length]-1;
         lastChar = [equationString substringFromIndex:lastIndex];
         range = NSMakeRange(lastIndex, 1);
     }
     
+    //This checks if a binary operator has been pressed before and adds it, along with whatever is in the display, to the equation.
     if (operandNeedSet) {
         [equationString appendString:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
         [operatorsArray addObject:sender.titleLabel.text];
         [numbersArray addObject:outputLabel.text];
         equationLabel.text = equationString;
-    } else if (([lastChar isEqualToString:@"+"] || [lastChar isEqualToString:@"-"] ||
+    }
+    //A binary operator has been pressed, and instead of anything else pressed another binary operator has been pressed, so it needs to be changed instead of just added to the equation.
+    else if (([lastChar isEqualToString:@"+"] || [lastChar isEqualToString:@"-"] ||
                [lastChar isEqualToString:@"*"] || [lastChar isEqualToString:@"÷"]) && lastIndex > 0) {
         [equationString replaceCharactersInRange:range withString:sender.titleLabel.text];
         [operatorsArray replaceObjectAtIndex:([operatorsArray count]-1) withObject:sender.titleLabel.text];
-    } else {
+    }
+    //Something else has happened from the previous two statements and this, like every other else statement, acts as a catch-all to ensure that everything gets added that needs to be, and nothing else.
+    else {
         [equationString appendString:outputLabel.text];
         [numbersArray addObject:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
@@ -169,27 +172,29 @@
     sender.alpha = 1.0;
     [numbersArray addObject:outputLabel.text];
     
-    NSLog(@"Performing calculations");
-    NSLog(@"The operands");
-    for (NSString *ind in numbersArray) {
-        NSLog(@"%@", ind);
-    }
-    
-    NSLog(@"The operators");
-    for (NSString *ind in operatorsArray) {
-        NSLog(@"%@", ind);
-    }
+//    NSLog(@"Performing calculations");
+//    NSLog(@"The operands");
+//    for (NSString *ind in numbersArray) {
+//        NSLog(@"%@", ind);
+//    }
+//    
+//    NSLog(@"The operators");
+//    for (NSString *ind in operatorsArray) {
+//        NSLog(@"%@", ind);
+//    }
 
-    //Two methods to take everything out of the equals sign.
+    //Two methods to take everything out of the equals sign method. These two will probably be changed and used later on to assist with parenthesis, roots, and the trigonomentric functions.
     [self performMultiplicationAndDivision];
     [self performAdditionAndSubtraction];
     
+    //Clear everything in the two strings
     [displayString replaceCharactersInRange:NSMakeRange(0, [displayString length]) withString:@""];
     [equationString replaceCharactersInRange:NSMakeRange(0, [equationString length]) withString:@""];
     
     NSNumber *num = [decimalFormatter numberFromString:numbersArray[0]];
     outputLabel.text = [NSString stringWithFormat:@"%@", num];
     
+    //Remove everything that has been added to both operator and operand arrays.
     [numbersArray removeAllObjects];
     [operatorsArray removeAllObjects];
     decimalSet = false;
@@ -213,7 +218,6 @@
     decimalSet = true;
 }
 
-
 //MARK: Other methods
 
 //Every button has a link to this method. The reason being is that since every button is created programmatically, they don't behave like buttons placed on the storyboard. For example, they don't look like they're being pressed unless the alpha is changed.
@@ -221,8 +225,18 @@
     sender.alpha = 0.25;
 }
 
-//TODO:
-//
+//TODO: Change this to accept strings so it can be reused with parenthesis and trigonometric functions.
+//Method to perform all calculations within parentheses
+-(void) performParenthesisCalculations {
+    
+}
+
+//Method to perform all exponential calculations
+-(void) performExponentialCalculations {
+    
+}
+
+//Method to perform Multiplication and Division from PEMDAS
 -(void) performMultiplicationAndDivision {
     Calculator *myCalc = [[Calculator alloc] init];
     //Go through the entire operands array and perform multiplication and division first.
@@ -247,6 +261,7 @@
     }
 }
 
+//Method to perform Addition and Subtraction from PEMDAS
 -(void) performAdditionAndSubtraction {
     Calculator *myCalc = [[Calculator alloc] init];
     

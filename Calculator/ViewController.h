@@ -45,6 +45,8 @@
 
 //-(void) fixEquationString;
 //-(void) processDigit: (long) digit;
+-(void) performParenthesisCalculations;
+-(void) performExponentialCalculations;
 -(void) performMultiplicationAndDivision;
 -(void) performAdditionAndSubtraction;
 -(void) performInitialSetup;
