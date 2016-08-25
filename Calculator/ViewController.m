@@ -27,16 +27,12 @@
     [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
     [decimalFormatter setMinimumFractionDigits:0];
     [decimalFormatter setMaximumFractionDigits:10];
-//    decimalFormatter.usesSignificantDigits = YES;
-//    decimalFormatter.maximumSignificantDigits = 10;
-    
+
     count = 1;
     currentFraction = 0;
     operandNeedSet = false;
     piWasPressed = false;
-//    NSLog(@"%.0f", currentFraction);
     outputLabel.text = @"0";
-    
 }
 
 //MARK: Row 1 Functions
@@ -51,7 +47,7 @@
         NSLog(@"Tangent pressed");
     }
     
-    //Leave these blocked for now until I get functionality with operator precedence.
+    //TODO: Leave these blocked for now until I get functionality with operator precedence.
 //    [equationString appendString:[NSString stringWithFormat:@"%@(", sender.titleLabel.text]];
 //    [displayString appendString:[NSString stringWithFormat:@"%@(", sender.titleLabel.text]];
 //    equationLabel.text = equationString;
@@ -63,10 +59,11 @@
     NSLog(@"Fraction pressed");
 }
 
+//Method to erase just the last portion of the equation entered.
 -(IBAction)clearButtonPressed:(UIButton *)sender {
     sender.alpha = 1.0;
     outputLabel.text = @"0";
-    //TODO: Erase only the last number entered.
+    //TODO: Erase only the last number entered, operator, or trigonometric function.
     [displayString replaceCharactersInRange:NSMakeRange(0, [displayString length]) withString:@""];
     outputLabel.text = @"0";
     count = 1;
@@ -75,6 +72,7 @@
     NSLog(@"Clearing output");
 }
 
+//Like a fire sale, everything has to go. Thus, everything is cleared and reset to nothing.
 -(IBAction)eraseEverything:(UIButton *)sender {
     sender.alpha = 1.0;
     NSLog(@"Erasing everything. And I do mean everything");
@@ -93,9 +91,8 @@
 
 //MARK: Row 2 Functions
 
-//
+//Pi button has been pressed, a couple different things need to be added to ensure it works correctly.
 -(IBAction)piPressed:(UIButton *)sender {
-    //TODO: Ensure Pi gets added to the equation instead of just the output label.
     sender.alpha = 1.0;
     if (!piWasPressed) {
         [equationString appendString:[NSString stringWithFormat:@"%f", M_PI]];
@@ -107,6 +104,9 @@
 
 //MARK: Row 3 Functions
 
+-(void) parenthesisPressed {
+    
+}
 //MARK: Numberpad Functions
 - (IBAction)digitClicked:(UIButton *)sender {
     sender.alpha = 1.0;
@@ -135,7 +135,7 @@
     
     //This checks if a binary operator has been pressed before and adds it, along with whatever is in the display, to the equation.
     if (operandNeedSet) {
-        [equationString appendString:outputLabel.text];
+//        [equationString appendString:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
         [operatorsArray addObject:sender.titleLabel.text];
         [numbersArray addObject:outputLabel.text];
@@ -149,7 +149,7 @@
     }
     //Something else has happened from the previous two statements and this, like every other else statement, acts as a catch-all to ensure that everything gets added that needs to be, and nothing else.
     else {
-        [equationString appendString:outputLabel.text];
+//        [equationString appendString:outputLabel.text];
         [numbersArray addObject:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
         [operatorsArray addObject:sender.titleLabel.text];
@@ -184,6 +184,8 @@
 //    }
 
     //Two methods to take everything out of the equals sign method. These two will probably be changed and used later on to assist with parenthesis, roots, and the trigonomentric functions.
+    [self performParenthesisCalculations];
+    [self performExponentialCalculations];
     [self performMultiplicationAndDivision];
     [self performAdditionAndSubtraction];
     
@@ -389,8 +391,8 @@
 //    [buttonArray[2][1] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[2][2] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[2][3] setTitle:@"" forState:UIControlStateNormal];
-//    [buttonArray[2][4] setTitle:@"" forState:UIControlStateNormal];
-//    [buttonArray[2][5] setTitle:@"" forState:UIControlStateNormal];
+    [buttonArray[2][4] setTitle:@"(" forState:UIControlStateNormal];
+    [buttonArray[2][5] setTitle:@")" forState:UIControlStateNormal];
     
     //MARK: Row 4 Buttons:
     //Blank Blank 7 8 9 +
@@ -399,7 +401,7 @@
     [buttonArray[3][2] setTitle:@"7" forState:UIControlStateNormal];
     [buttonArray[3][3] setTitle:@"8" forState:UIControlStateNormal];
     [buttonArray[3][4] setTitle:@"9" forState:UIControlStateNormal];
-    [buttonArray[3][5] setTitle:@"+" forState:UIControlStateNormal];
+    [buttonArray[3][5] setTitle:@"÷" forState:UIControlStateNormal];
     
     //MARK: Row 5 Buttons:
     //Blank Blank 4 5 6 -
@@ -408,7 +410,7 @@
     [buttonArray[4][2] setTitle:@"4" forState:UIControlStateNormal];
     [buttonArray[4][3] setTitle:@"5" forState:UIControlStateNormal];
     [buttonArray[4][4] setTitle:@"6" forState:UIControlStateNormal];
-    [buttonArray[4][5] setTitle:@"-" forState:UIControlStateNormal];
+    [buttonArray[4][5] setTitle:@"*" forState:UIControlStateNormal];
     
     //MARK: Row 6 Buttons:
     //Blank Blank 1 2 3 ÷
@@ -417,7 +419,7 @@
     [buttonArray[5][2] setTitle:@"1" forState:UIControlStateNormal];
     [buttonArray[5][3] setTitle:@"2" forState:UIControlStateNormal];
     [buttonArray[5][4] setTitle:@"3" forState:UIControlStateNormal];
-    [buttonArray[5][5] setTitle:@"÷" forState:UIControlStateNormal];
+    [buttonArray[5][5] setTitle:@"-" forState:UIControlStateNormal];
     
     //MARK: Row 7 Buttons:
     //Blank Blank 0 . = *
@@ -433,7 +435,7 @@
     [buttonArray[6][4] setTitle:@"=" forState:UIControlStateNormal];
     [buttonArray[6][4] addTarget:(self) action:@selector(equalsPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [buttonArray[6][5] setTitle:@"*" forState:UIControlStateNormal];
+    [buttonArray[6][5] setTitle:@"+" forState:UIControlStateNormal];
     
     
     //Do ALL additional button setup between the first for loop and this one. This double loop adds all the buttons to the view at one time.
