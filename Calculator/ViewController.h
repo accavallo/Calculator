@@ -22,7 +22,7 @@
     
     NSString *operand;
     
-    Boolean decimalSet, operandNeedSet, equalsWasPressed;
+    Boolean decimalSet, operandNeedSet, equalsWasPressed, piWasPressed;
     
     NSMutableString *displayString;
     NSMutableString *equationString;
@@ -45,6 +45,8 @@
 
 //-(void) fixEquationString;
 //-(void) processDigit: (long) digit;
+-(void) performMultiplicationAndDivision;
+-(void) performAdditionAndSubtraction;
 -(void) performInitialSetup;
 
 @end

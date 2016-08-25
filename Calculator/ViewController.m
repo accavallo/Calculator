@@ -33,6 +33,7 @@
     count = 1;
     currentFraction = 0;
     operandNeedSet = false;
+    piWasPressed = false;
 //    NSLog(@"%.0f", currentFraction);
     outputLabel.text = @"0";
     
@@ -41,6 +42,7 @@
 //MARK: Row 1 Functions
 -(IBAction)trigonometricButtons:(UIButton *)sender {
     sender.alpha = 1.0;
+    piWasPressed = false;
     if ([sender.titleLabel.text isEqualToString:@"Sin"]) {
         NSLog(@"Sine pressed");
     } else if ([sender.titleLabel.text isEqualToString:@"Cos"]) {
@@ -64,13 +66,12 @@
 -(IBAction)clearButtonPressed:(UIButton *)sender {
     sender.alpha = 1.0;
     outputLabel.text = @"0";
-    currentNumber = 0;
-    currentFraction = 0;
-    equationLabel.text = @"";
-    [equationString replaceCharactersInRange:NSMakeRange(0, [equationString length]) withString:@""];
+    //TODO: Erase only the last number entered.
     [displayString replaceCharactersInRange:NSMakeRange(0, [displayString length]) withString:@""];
+    outputLabel.text = @"0";
     count = 1;
     decimalSet = false;
+    piWasPressed = false;
     NSLog(@"Clearing output");
 }
 
@@ -85,15 +86,23 @@
     equationLabel.text = @"";
     count = 1;
     decimalSet = false;
- 
+    piWasPressed = false;
     [operatorsArray removeAllObjects];
     [numbersArray removeAllObjects];
 }
 
 //MARK: Row 2 Functions
+
+//
 -(IBAction)piPressed:(UIButton *)sender {
+    //TODO: Ensure Pi gets added to the equation instead of just the output label.
     sender.alpha = 1.0;
-    outputLabel.text = [NSString stringWithFormat:@"%f", M_PI];
+    if (!piWasPressed) {
+        [equationString appendString:[NSString stringWithFormat:@"%f", M_PI]];
+        equationLabel.text = equationString;
+        outputLabel.text = [NSString stringWithFormat:@"%f", M_PI];
+    }
+    piWasPressed = true;
 }
 
 //MARK: Row 3 Functions
@@ -127,6 +136,7 @@
     }
     
     if (operandNeedSet) {
+        [equationString appendString:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
         [operatorsArray addObject:sender.titleLabel.text];
         [numbersArray addObject:outputLabel.text];
@@ -136,10 +146,10 @@
         [equationString replaceCharactersInRange:range withString:sender.titleLabel.text];
         [operatorsArray replaceObjectAtIndex:([operatorsArray count]-1) withObject:sender.titleLabel.text];
     } else {
-        [equationString appendString:@"0"];
-        [operatorsArray addObject:sender.titleLabel.text];
+        [equationString appendString:outputLabel.text];
         [numbersArray addObject:outputLabel.text];
         [equationString appendString:sender.titleLabel.text];
+        [operatorsArray addObject:sender.titleLabel.text];
     }
     equationLabel.text = equationString;
 //    NSLog(@"%@", [equationString substringFromIndex:lastIndex]);
@@ -150,14 +160,14 @@
     outputLabel.text = @"0";
     
     operandNeedSet = false;
+    decimalSet = false;
+    piWasPressed = false;
 }
 
-//
+//Method to perform all the necessary calculations once the equals button has been pressed.
 - (IBAction)equalsPressed:(UIButton *)sender {
     sender.alpha = 1.0;
     [numbersArray addObject:outputLabel.text];
-    //TODO: Equals Sign
-    //Go through the entire equation string and separate the operands from the operators into the numbersArray and operatorsArray
     
     NSLog(@"Performing calculations");
     NSLog(@"The operands");
@@ -169,10 +179,56 @@
     for (NSString *ind in operatorsArray) {
         NSLog(@"%@", ind);
     }
-//    int ind = 0;
+
+    //Two methods to take everything out of the equals sign.
+    [self performMultiplicationAndDivision];
+    [self performAdditionAndSubtraction];
+    
+    [displayString replaceCharactersInRange:NSMakeRange(0, [displayString length]) withString:@""];
+    [equationString replaceCharactersInRange:NSMakeRange(0, [equationString length]) withString:@""];
+    
+    NSNumber *num = [decimalFormatter numberFromString:numbersArray[0]];
+    outputLabel.text = [NSString stringWithFormat:@"%@", num];
+    
+    [numbersArray removeAllObjects];
+    [operatorsArray removeAllObjects];
+    decimalSet = false;
+}
+
+//Method to add a decimal point if one hasn't been added. We don't want the user to continually click the decimal button and end up with 50 decimal points, or to be able to click the decimal button to add a point within the same number.
+- (IBAction)decimalPressed:(UIButton *)sender {
+    sender.alpha = 1.0;
+    NSLog(@"Now adding a decimal point");
+    if (!decimalSet) {
+        if([displayString length] == 0){
+            [equationString appendString:@"0"];
+            [displayString appendString:@"0"];
+        }
+        [equationString appendString:@"."];
+        equationLabel.text = equationString;
+        
+        [displayString appendString:@"."];
+        outputLabel.text = displayString;
+    }
+    decimalSet = true;
+}
+
+
+//MARK: Other methods
+
+//Every button has a link to this method. The reason being is that since every button is created programmatically, they don't behave like buttons placed on the storyboard. For example, they don't look like they're being pressed unless the alpha is changed.
+-(IBAction)touchDown:(UIButton *)sender {
+    sender.alpha = 0.25;
+}
+
+//TODO:
+//
+-(void) performMultiplicationAndDivision {
     Calculator *myCalc = [[Calculator alloc] init];
     //Go through the entire operands array and perform multiplication and division first.
-    for (int k = (int)([operatorsArray count]-1); k >= 0; k--) {
+    //TODO: Change this to go from left to right instead of right to left.
+    //Keep trying 9+6÷3*2. That produces 11 for whatever reason.
+    for (int k = 0; k < [operatorsArray count]; k++) {
         if ([operatorsArray[k] isEqualToString:@"*"] || [operatorsArray[k] isEqualToString:@"÷"]) {
             [myCalc setOperand1: [numbersArray[k] doubleValue]];
             [myCalc setOperand2: [numbersArray[k+1] doubleValue]];
@@ -186,8 +242,13 @@
             [numbersArray replaceObjectAtIndex:k withObject:result];
             
             [operatorsArray removeObjectAtIndex:k];
+            k--;
         }
     }
+}
+
+-(void) performAdditionAndSubtraction {
+    Calculator *myCalc = [[Calculator alloc] init];
     
     //Perform the remaining addition and subtraction.
     for (int k = 0; k < [operatorsArray count]; k++) {
@@ -203,38 +264,8 @@
         [numbersArray replaceObjectAtIndex:k withObject:result];
         
         [operatorsArray removeObjectAtIndex:k];
+        k--;
     }
-    
-    [displayString replaceCharactersInRange:NSMakeRange(0, [displayString length]) withString:@""];
-    [equationString replaceCharactersInRange:NSMakeRange(0, [equationString length]) withString:@""];
-    
-    NSNumber *num = [decimalFormatter numberFromString:numbersArray[0]];
-    outputLabel.text = [NSString stringWithFormat:@"%@", num];
-    
-    [numbersArray removeAllObjects];
-    [operatorsArray removeAllObjects];
-}
-
-- (IBAction)decimalPressed:(UIButton *)sender {
-    sender.alpha = 1.0;
-    NSLog(@"Now adding a decimal point");
-    if (!decimalSet) {
-        if([displayString length] == 0){
-            [equationString appendString:@"0"];
-            [displayString appendString:@"0"];
-        }
-        [equationString appendString:@"."];
-        equationLabel.text = equationString;
-        
-        [displayString appendString:@"."];
-        outputLabel.text = displayString;
-    }
-    
-    decimalSet = true;
-}
-
--(IBAction)touchDown:(UIButton *)sender {
-    sender.alpha = 0.25;
 }
 
 //All the buttons and labels will be created here, programmatically. I really, really, really, hate working with constraints, as they always seem to get one over on me. Therefore, I'm saying to hell with constraints, and creating everything this way. Constraints can't bother me, and I don't have to spend countless hours messing with them just to have them laugh in my face as they repeatedly don't work. Apple really needs to do something better with their constraints, or they'd probably just tell me to "git gud".
