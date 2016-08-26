@@ -45,7 +45,8 @@
 
 //-(void) fixEquationString;
 //-(void) processDigit: (long) digit;
--(void) parenthesisPressed;
+-(IBAction) parenthesisPressed: (UIButton *)sender;
+-(IBAction)squareRootPressed:(UIButton *)sender;
 -(void) performParenthesisCalculations;
 -(void) performExponentialCalculations;
 -(void) performMultiplicationAndDivision;
