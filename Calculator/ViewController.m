@@ -101,12 +101,32 @@
     }
     piWasPressed = true;
 }
+//TODO: Add functionality for square root
+//Square root button has been pressed, so the necessary symbols need to be entered so it can be processed correctly later.
+-(IBAction)squareRootPressed:(UIButton *)sender {
+    sender.alpha = 1.0;
+    [equationString appendString:[NSString stringWithFormat:@"%@(", sender.titleLabel.text]];
+    equationLabel.text = equationString;
+    
+    [displayString appendString:@"√("];
+    outputLabel.text = displayString;
+    
+    [operatorsArray addObject:@"√("];
+}
 
 //MARK: Row 3 Functions
-
--(void) parenthesisPressed {
+//TODO: Add functionality for when parentheses are used.
+-(IBAction) parenthesisPressed: (UIButton *)sender {
+    sender.alpha = 1.0;
+    [equationString appendString:sender.titleLabel.text];
+    equationLabel.text = equationString;
     
+    [displayString appendString:sender.titleLabel.text];
+    outputLabel.text = displayString;
+    
+    [operatorsArray addObject:sender.titleLabel.text];
 }
+
 //MARK: Numberpad Functions
 - (IBAction)digitClicked:(UIButton *)sender {
     sender.alpha = 1.0;
@@ -344,7 +364,7 @@
         }
     }
     
-    //    √ aⁿ
+    //    aⁿ
     
     //Row 1 (top row): Sin, Cos, Tan Fraction, Clear, All Clear
     for (int i = 0; i < 6; i++) {
@@ -379,7 +399,10 @@
     [buttonArray[1][0] setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [buttonArray[1][0] addTarget:self action:@selector(piPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-//    [buttonArray[1][1] setTitle:@"" forState:UIControlStateNormal];
+    [buttonArray[1][1] setTitle:@"√" forState:UIControlStateNormal];
+    [buttonArray[1][1] addTarget:self action:@selector(squareRootPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
 //    [buttonArray[1][2] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[1][3] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[1][4] setTitle:@"" forState:UIControlStateNormal];
@@ -391,8 +414,12 @@
 //    [buttonArray[2][1] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[2][2] setTitle:@"" forState:UIControlStateNormal];
 //    [buttonArray[2][3] setTitle:@"" forState:UIControlStateNormal];
+    
     [buttonArray[2][4] setTitle:@"(" forState:UIControlStateNormal];
+    [buttonArray[2][4] addTarget:self action:@selector(parenthesisPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
     [buttonArray[2][5] setTitle:@")" forState:UIControlStateNormal];
+    [buttonArray[2][5] addTarget:self action:@selector(parenthesisPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     //MARK: Row 4 Buttons:
     //Blank Blank 7 8 9 +
